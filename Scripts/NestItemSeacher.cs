@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using ClusterVR.CreatorKit.Item.Implements;
-using Sirenix.OdinInspector.Editor;
-using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
 
@@ -64,7 +62,7 @@ namespace sarisarinyama.cluster
             debugText += " - " + childObject.name.ToString();
             if (outputItemID) debugText += " [" + childObject.GetComponent<Item>().Id + "]";
             if (outputItemName) debugText += " [" + childObject.GetComponent<Item>().ItemName + "]";
-            if (parentAndChild.IsNullOrEmpty())
+            if (parentAndChild.Count==0)
             {
                 parentAndChild.Add(debugText);
                 Debug.Log(debugText);
