@@ -9,7 +9,7 @@ namespace sarisarinyama.cluster
     {
         [SerializeField] private bool outputItemID=true;
         [SerializeField] private bool outputItemName=true;
-        [SerializeField] private bool searchPrefab=true;
+        [SerializeField] private bool searchOpenPrefab=true;
 
         private List<string> parentAndChild = new List<string>();
 
@@ -22,8 +22,8 @@ namespace sarisarinyama.cluster
                 string path = AssetDatabase.GetAssetOrScenePath(item.gameObject);
                 bool isScene = true;
                 // シーン上に存在するオブジェクトかどうか文字列で判定.
-                if(!searchPrefab)isScene= path.Contains(".unity");
-                // シーン上に存在するオブジェクトならば処理.
+                if(!searchOpenPrefab)isScene= path.Contains(".unity");
+                
                 if (isScene)
                 {
                     // List<GameObject> itemObjects;
@@ -33,6 +33,7 @@ namespace sarisarinyama.cluster
                         SearchChildItem(items[i].gameObject);
                     }
                 }
+
             }
         }
 
