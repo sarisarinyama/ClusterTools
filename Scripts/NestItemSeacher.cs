@@ -1,16 +1,22 @@
-﻿using ClusterVR.CreatorKit.Item.Implements;
-using Sirenix.OdinInspector;
+﻿using System.Collections.Generic;
+using ClusterVR.CreatorKit.Item.Implements;
 using UnityEditor;
 using UnityEngine;
 
 namespace sarisarinyama.cluster
 {
+    struct ParentAndChild
+    {
+        public GameObject Parent;
+        public GameObject Child;
+    }
     public class NestItemSeacher : MonoBehaviour
     {
-        [InfoBox("プレイモードに入ると全てのオブジェクトから親子になっているItemを検索し、\nNestItem : 親オブジェクト名 - 小オブジェクト名\nの形式でDebug.Logに出力します。")]
-        public bool outputItemID;
-        public bool outputItemName;
+        [SerializeField] bool outputItemID;
+        [SerializeField] bool outputItemName;
 
+        private List<ParentAndChild> parentAndChild;        
+        
         void Start()
         {
             foreach (Item item in UnityEngine.Resources.FindObjectsOfTypeAll(typeof(Item)))
