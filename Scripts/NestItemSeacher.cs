@@ -10,14 +10,15 @@ namespace sarisarinyama.cluster
     public class NestItemSeacher : MonoBehaviour
     {
         [SerializeField] private bool outputItemID;
-        [SerializeField] bool outputItemName;
+        [SerializeField] private bool outputItemName;
 
         private List<string> parentAndChild = new List<string>();
 
         void Start()
         {
-            foreach (Item item in UnityEngine.Resources.FindObjectsOfTypeAll(typeof(Item)))
+            foreach (var o in UnityEngine.Resources.FindObjectsOfTypeAll(typeof(Item)))
             {
+                var item = (Item) o;
                 // アセットからパスを取得.シーン上に存在するオブジェクトの場合,シーンファイル（.unity）のパスを取得.
                 string path = AssetDatabase.GetAssetOrScenePath(item.gameObject);
                 // シーン上に存在するオブジェクトかどうか文字列で判定.
