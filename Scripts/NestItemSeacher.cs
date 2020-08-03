@@ -1,22 +1,19 @@
 ﻿using System.Collections.Generic;
 using ClusterVR.CreatorKit.Item.Implements;
+using Sirenix.OdinInspector.Editor;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
 
 namespace sarisarinyama.cluster
 {
-    struct ParentAndChild
-    {
-        public GameObject Parent;
-        public GameObject Child;
-    }
     public class NestItemSeacher : MonoBehaviour
     {
-        [SerializeField] bool outputItemID;
+        [SerializeField] private bool outputItemID;
         [SerializeField] bool outputItemName;
 
-        private List<ParentAndChild> parentAndChild;        
-        
+        private List<string> parentAndChild = new List<string>();
+
         void Start()
         {
             foreach (Item item in UnityEngine.Resources.FindObjectsOfTypeAll(typeof(Item)))
@@ -64,7 +61,19 @@ namespace sarisarinyama.cluster
             debugText += " - " + childObject.name.ToString();
             if (outputItemID) debugText += " [" + childObject.GetComponent<Item>().Id + "]";
             if (outputItemName) debugText += " [" + childObject.GetComponent<Item>().ItemName + "]";
-            Debug.Log(debugText);
+            if (parentAndChild.IsNullOrEmpty())
+            {
+                parentAndChild.Add(debugText);
+                Debug.Log(debugText);
+            }
+            else
+            {
+                if (null==parentAndChild.Find(n => n.Equals(debugText)))
+                {
+                    parentAndChild.Add(debugText);
+                    Debug.Log(debugText);   
+                }
+            }
         }
     }
 }
