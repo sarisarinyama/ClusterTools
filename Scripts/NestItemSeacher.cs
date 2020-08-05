@@ -26,7 +26,6 @@ namespace sarisarinyama.cluster
                 
                 if (isScene)
                 {
-                    // List<GameObject> itemObjects;
                     Item[] items = item.gameObject.GetComponentsInChildren<Item>(true);
                     for (int i = 0; i < items.Length; i++)
                     {
