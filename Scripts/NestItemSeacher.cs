@@ -31,8 +31,26 @@ namespace sarisarinyama.cluster
                     {
                         SearchChildItem(items[i].gameObject);
                     }
+                    
+                    // Itemが複数ついているオブジェクトをチェック（イレギュラーなエラーだと思います）
+                    SearchDualItem(item);
                 }
 
+            }
+        }
+
+        private void SearchDualItem(Item item)
+        {
+            var items =item.gameObject.GetComponents<Item>();
+            if (items.Length >= 2)
+            {
+                
+                string debugText = "";
+                debugText = item.gameObject.name + "にItemが複数付与されています。";
+                if (outputItemID) debugText += " [" + item.gameObject.GetComponent<Item>().Id + "]";
+                if (outputItemName) debugText += " [" + item.gameObject.GetComponent<Item>().ItemName + "]";
+
+                Debug.Log(debugText);
             }
         }
 
