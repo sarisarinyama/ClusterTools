@@ -13,7 +13,7 @@ using MySql.Data.MySqlClient;
 
 namespace sarisarinyama.cluster.GameJam2020inWinter
 {
-    public class GameJam2020inWinter : EditorWindow
+    public class GameJam2020inWinterProgress : EditorWindow
     {
         private static readonly string database = "Cluster";
         private static readonly string table = "GameJam2020inWinter";
@@ -49,8 +49,8 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
         /// <summary>
         /// アセットパス
         /// </summary>
-        public const string LocalAssetPath = "Assets/ClusterTools/GameJam2020inWinter/Resources/LocalData.asset";
-        public const string RankingAssetPath = "Assets/ClusterTools/GameJam2020inWinter/Resources/RankingData.asset";
+        public const string LocalAssetPath = "Assets/GameJam2020inWinter/Resources/LocalData.asset";
+        public const string RankingAssetPath = "Assets/GameJam2020inWinter/Resources/RankingData.asset";
 
 
         private void OnEnable()
@@ -59,10 +59,10 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
         }
 
 
-        [MenuItem("Cluster/Game Jam 2020 in Winter")]
+        [MenuItem("Cluster/Game Jam 2020 in Winter Progress")]
         static void Init()
         {
-            var window = EditorWindow.GetWindow<GameJam2020inWinter>("Game Jam 2020 in Winter Progress");
+            var window = EditorWindow.GetWindow<GameJam2020inWinterProgress>("Game Jam Progress");
 
             window.minSize = new Vector2(480, 400);
             window.maxSize = new Vector2(480, 400);
@@ -626,14 +626,14 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
             // 新規の場合は作成
             if (!AssetDatabase.Contains(_rankingData as UnityEngine.Object))
             {
-                string directory = Path.GetDirectoryName(GameJam2020inWinter.RankingAssetPath);
+                string directory = Path.GetDirectoryName(GameJam2020inWinterProgress.RankingAssetPath);
                 if (!Directory.Exists(directory))
                 {
                     Directory.CreateDirectory(directory);
                 }
 
                 // アセット作成
-                AssetDatabase.CreateAsset(_rankingData, GameJam2020inWinter.RankingAssetPath);
+                AssetDatabase.CreateAsset(_rankingData, GameJam2020inWinterProgress.RankingAssetPath);
             }
 
             // インスペクターから設定できないようにする
@@ -648,7 +648,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
 
         private void RankingDataImport()
         {
-            RankingData rankingData = AssetDatabase.LoadAssetAtPath<RankingData>(GameJam2020inWinter.RankingAssetPath);
+            RankingData rankingData = AssetDatabase.LoadAssetAtPath<RankingData>(GameJam2020inWinterProgress.RankingAssetPath);
             if (rankingData == null)
                 return;
             _rankingData = rankingData;

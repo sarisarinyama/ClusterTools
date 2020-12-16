@@ -337,14 +337,14 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
             // 新規の場合は作成
             if (!AssetDatabase.Contains(_rankingData as UnityEngine.Object))
             {
-                string directory = Path.GetDirectoryName(GameJam2020inWinter.RankingAssetPath);
+                string directory = Path.GetDirectoryName(GameJam2020inWinterProgress.RankingAssetPath);
                 if (!Directory.Exists(directory))
                 {
                     Directory.CreateDirectory(directory);
                 }
 
                 // アセット作成
-                AssetDatabase.CreateAsset(_rankingData, GameJam2020inWinter.RankingAssetPath);
+                AssetDatabase.CreateAsset(_rankingData, GameJam2020inWinterProgress.RankingAssetPath);
             }
 
             // インスペクターから設定できないようにする
@@ -359,7 +359,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
 
         private void RankingDataImport()
         {
-            RankingData rankingData = AssetDatabase.LoadAssetAtPath<RankingData>(GameJam2020inWinter.RankingAssetPath);
+            RankingData rankingData = AssetDatabase.LoadAssetAtPath<RankingData>(GameJam2020inWinterProgress.RankingAssetPath);
             if (rankingData == null)
                 return;
             _rankingData = rankingData;
@@ -367,7 +367,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
 
         private void LocalDataImport()
         {
-            LocalData localData = AssetDatabase.LoadAssetAtPath<LocalData>(GameJam2020inWinter.LocalAssetPath);
+            LocalData localData = AssetDatabase.LoadAssetAtPath<LocalData>(GameJam2020inWinterProgress.LocalAssetPath);
             if (localData == null)
                 return;
             _localData = localData;
