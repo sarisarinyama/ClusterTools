@@ -19,11 +19,12 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
 
         void OnGUI()
         {
-            GUILayout.Label("パスワードを入力してください");
-            GUILayout.Space(10f);
+            GUILayout.Label("チームのパスワードを入力してください");
+            GUILayout.Label("注意：入力したパスワードは作者個人のDBに登録されるので\r\n他のサービスで使うパスワードを入力しないでください！！");
+//            GUILayout.Space(10f);
             GUI.SetNextControlName("ForcusField");
             _input = GUILayout.TextField(_input);
-            GUILayout.Space(10f);
+//            GUILayout.Space(10f);
 
             // 何かしら入力しないとOKボタンを押せないようにするDisableGroup
             EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(_input));

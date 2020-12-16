@@ -544,8 +544,8 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
         {
             var passwordWindow = EditorWindow.GetWindow<PasswordWindow>("UserPassword", true);
             passwordWindow.Setup(callback);
-            passwordWindow.minSize = new Vector2(240, 100);
-            passwordWindow.maxSize = new Vector2(240, 100);
+            passwordWindow.minSize = new Vector2(340, 100);
+            passwordWindow.maxSize = new Vector2(340, 100);
         }
 
         private void OpenListWindow()
