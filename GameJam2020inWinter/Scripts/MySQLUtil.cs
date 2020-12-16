@@ -20,7 +20,7 @@ namespace sarisarinyama.common
 
         public static bool DBConnection()
         {
-            Debug.Log("db connection start");
+//            Debug.Log("db connection start");
             _connectionString = $"Server={host};Database={database};User={user};Password={password};Pooling=";
             if (pooling)
             {
@@ -36,7 +36,7 @@ namespace sarisarinyama.common
                 _con = new MySqlConnection();
                 _con.ConnectionString = _connectionString;
                 _con.Open();
-                Debug.Log("db connection open");
+//                Debug.Log("db connection open");
                 return true;
             }
 
@@ -57,7 +57,7 @@ namespace sarisarinyama.common
                 if (_con.State.ToString() != "Closed")
                 {
                     _con.Close();
-                    Debug.Log("db connection closed");
+//                    Debug.Log("db connection closed");
                 }
 
                 _con.Dispose();

@@ -15,44 +15,42 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
 {
     public class GameJam2020inWinter : EditorWindow
     {
-        private static string database = "Cluster";
-        private static string table = "GameJam2020inWinter";
-        private static string userTable = "GameJam2020inWinterUser";
+        private static readonly string database = "Cluster";
+        private static readonly string table = "GameJam2020inWinter";
+        private static readonly string userTable = "GameJam2020inWinterUser";
 
-        private static MySqlCommand _cmd = null;
-        private static MySqlDataReader _rdr = null;
+        private static MySqlCommand _cmd;
+        private static MySqlDataReader _rdr;
 
-        private string _statusText = "ステータス:";
         string timePrefix = "終了まで:";
 
-        static readonly float updatetime = 1.0f;
+        private float _updateTime = 1.0f;
         static double _nextUpdate = 0;
 
         private LocalData _localData = null;
         private PublicData _publicData = null;
         private RankingData _rankingData = null;
         bool _isDisable = false;
-        private Vector2[] userPoint = new Vector2[] {new Vector2(0f, 0f)};
+        private Vector2[] _userPoint = new Vector2[] {new Vector2(0f, 0f)};
 
 //        private DateTime beginDt =new DateTime(2020,12,18,20,00,00,00);
 //        private static DateTime _endDt =new DateTime(2020,12,20,20,00,00,00);
-        private static DateTime _endDt = new DateTime(2020, 12, 16, 20, 00, 00, 00);
+        private static DateTime _endDt = new DateTime(2020, 12, 20, 20, 00, 00, 00);
         private static DateTime _nowDt;
         private static string _endDtText = "";
         private static string _nowDtText = "";
         private static float _nowLine = 0f;
-        private TimeSpan duration;
-        private string durationText;
-        private string durationTextDays = "";
-        private string durationtextHours = "";
-        private string durationTextMinutes = "";
+        private TimeSpan _duration;
+        private string _durationText;
+        private string _durationTextDays = "";
+        private string _durationTextHours = "";
+        private string _durationTextMinutes = "";
 
         /// <summary>
         /// アセットパス
         /// </summary>
-        public const string LOCALASSET_PATH = "Assets/ClusterTools/GameJam2020inWinter/Resources/LocalData.asset";
-
-        public const string RANKINGASSET_PATH = "Assets/ClusterTools/GameJam2020inWinter/Resources/RankingData.asset";
+        public const string LocalAssetPath = "Assets/ClusterTools/GameJam2020inWinter/Resources/LocalData.asset";
+        public const string RankingAssetPath = "Assets/ClusterTools/GameJam2020inWinter/Resources/RankingData.asset";
 
 
         private void OnEnable()
@@ -171,7 +169,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
 
             DrawPublicPoint();
 
-            GUIChartEditor.PushLineChart(userPoint, Color.red);
+            GUIChartEditor.PushLineChart(_userPoint, Color.red);
 
 
             GUIChartEditor.EndChart();
@@ -179,7 +177,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
 
         private void MakePublicData()
         {
-            _publicData = new PublicData();
+            _publicData = ScriptableObject.CreateInstance<PublicData>();
 
             MySQLUtil.DBConnection();
             string _selectPublicData = $"SELECT Name,UpdateTime,Progress " +
@@ -193,9 +191,9 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
             foreach (DataRow row in tbl.Rows)
             {
                 PublicDataStruct publicDataStruct = new PublicDataStruct();
-                publicDataStruct._teamName = row["Name"].ToString();
-                publicDataStruct._progress = (int) row["Progress"];
-                publicDataStruct._dateTime = (DateTime) row["UpdateTime"];
+                publicDataStruct.TeamName = row["Name"].ToString();
+                publicDataStruct.Progress = (int) row["Progress"];
+                publicDataStruct.DateTime = (DateTime) row["UpdateTime"];
 
                 if (_publicData.publicDatas.ContainsKey(row["Name"].ToString()))
                 {
@@ -232,7 +230,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
             {
                 GUILayout.Label(_nowDtText);
                 GUILayout.Label(_endDtText);
-                GUILayout.Label(durationText);
+                GUILayout.Label(_durationText);
             }
         }
 
@@ -241,41 +239,41 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
             _nowDt = System.DateTime.Now;
             _nowDtText = _nowDt.ToString("現在:M月d日HH時mm分");
 
-            duration = _endDt - _nowDt;
-            if ((int) duration.Days > 1)
+            _duration = _endDt - _nowDt;
+            if ((int) _duration.Days > 1)
             {
-                durationTextDays = (int) duration.Days + "日と";
+                _durationTextDays = (int) _duration.Days + "日と";
             }
             else
             {
-                durationTextDays = "";
+                _durationTextDays = "";
             }
 
-            if ((int) duration.Hours > 1)
+            if ((int) _duration.Hours > 1)
             {
-                durationtextHours = (int) duration.Hours + "時間";
+                _durationTextHours = (int) _duration.Hours + "時間";
             }
             else
             {
-                durationtextHours = "";
+                _durationTextHours = "";
             }
 
-            if ((int) duration.Minutes > 1)
+            if ((int) _duration.Minutes > 1)
             {
-                durationTextMinutes = duration.Minutes.ToString("D2") + "分";
+                _durationTextMinutes = _duration.Minutes.ToString("D2") + "分";
             }
             else
             {
-                durationTextMinutes = "";
+                _durationTextMinutes = "";
             }
 
-            durationText = timePrefix + durationTextDays
-                                      + durationtextHours
-                                      + durationTextMinutes
-                                      + duration.Seconds.ToString("D2") + "秒"
+            _durationText = timePrefix + _durationTextDays
+                                      + _durationTextHours
+                                      + _durationTextMinutes
+                                      + _duration.Seconds.ToString("D2") + "秒"
                 ;
 
-            _nowLine = 48f - ((float) duration.TotalMinutes / 60);
+            _nowLine = 48f - ((float) _duration.TotalMinutes / 60);
         }
 
         private void DataEdit()
@@ -290,7 +288,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
             {
                 using (var verticalArea = new EditorGUILayout.VerticalScope())
                 {
-                    GUILayout.Label("ユーザ名:");
+                    GUILayout.Label("チーム名:");
 
                     using (var horizontalArea5 = new EditorGUILayout.HorizontalScope())
                     {
@@ -298,7 +296,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
                         GUILayout.Box(_localData.Progress.ToString().PadLeft(3, ' ') + "%");
                     }
 
-                    GUILayout.Label("コメント:");
+                    GUILayout.Label("コメント(24字迄):");
                     GUILayout.Label("ワールド名:");
                     GUILayout.Label("ワールドURL:");
                     GUILayout.Label("データ登録:");
@@ -357,7 +355,6 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
                     if (GUILayout.Button("ランキング"))
                     {
                         OpenListWindow();
-//                        RankingDataImport();
                     }
 
                     GUILayout.Label("");
@@ -374,7 +371,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
             LocalDataExport();
             if (_localData.TeamName == "")
             {
-                EditorUtility.DisplayDialog("データ登録エラー", "ユーザ名を入力してください", "OK");
+                EditorUtility.DisplayDialog("データ登録エラー", "チーム名を入力してください", "OK");
                 return false;
             }
 
@@ -393,37 +390,17 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
                     if (string.IsNullOrEmpty(x) == false)
                     {
                         _localData.Password = x;
+                        BeginCHeckPassword();
                     }
 
                     _isDisable = false;
                 });
+                
             }
-
+            
             if (_localData.Password != "")
             {
-                if (CheckPassword())
-                {
-                    string _insertSql = $"INSERT INTO {table} (Name, Comment,URL, UpdateTime, Title,Progress) " +
-                                        "VALUE( @Name " +
-                                        ", @Comment " +
-                                        ", @URL " +
-                                        ", now() " +
-                                        ", @Title " +
-                                        ", @Progress );";
-
-                    string[] _parameters = new string[]
-                    {
-                        "Name", _localData.TeamName,
-                        "Comment", _localData.Comment,
-                        "Progress", _localData.Progress.ToString(),
-                        "Title", _localData.Title,
-                        "URL", _localData.URL
-                    };
-                    MySQLUtil.DBInsert(_insertSql, _parameters);
-
-                    MakeUserPoint();
-                    MySQLUtil.DBClose();
-                }
+                BeginCHeckPassword();
             }
 
 
@@ -431,6 +408,33 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
             return true;
         }
 
+        private void BeginCHeckPassword()
+        {
+            
+            if (CheckPassword())
+            {
+                string _insertSql = $"INSERT INTO {table} (Name, Comment,URL, UpdateTime, Title,Progress) " +
+                                    "VALUE( @Name " +
+                                    ", @Comment " +
+                                    ", @URL " +
+                                    ", now() " +
+                                    ", @Title " +
+                                    ", @Progress );";
+
+                string[] _parameters = new string[]
+                {
+                    "Name", _localData.TeamName,
+                    "Comment", _localData.Comment,
+                    "Progress", _localData.Progress.ToString(),
+                    "Title", _localData.Title,
+                    "URL", _localData.URL
+                };
+                MySQLUtil.DBInsert(_insertSql, _parameters);
+
+                MakeUserPoint();
+                MySQLUtil.DBClose();
+            }
+        }
         private void MakeUserPoint()
         {
             string _selectUserProgress = $"SELECT UpdateTime,Progress " +
@@ -441,13 +445,13 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
             string[] _parameters = new string[] {"Name", _localData.TeamName};
 
             DataTable tbl = MySQLUtil.DBSelect(_selectUserProgress, _parameters);
-            userPoint = new Vector2[] {new Vector2(0f, 0f)};
+            _userPoint = new Vector2[] {new Vector2(0f, 0f)};
             foreach (DataRow row in tbl.Rows)
             {
-                Array.Resize(ref userPoint, userPoint.Length + 1);
+                Array.Resize(ref _userPoint, _userPoint.Length + 1);
                 float x = 48f - ((float) (_endDt - ((DateTime) row[0])).TotalMinutes / 60f);
                 float y = float.Parse(row[1].ToString());
-                userPoint[userPoint.Length - 1] = new Vector2(x, y);
+                _userPoint[_userPoint.Length - 1] = new Vector2(x, y);
 //                        Debug.Log(((_endDt-((DateTime)row[0])).TotalMinutes)/60);
             }
         }
@@ -466,8 +470,8 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
                         foreach (PublicDataStruct data in dic.Value)
                         {
                             Array.Resize(ref publicPoint, publicPoint.Length + 1);
-                            float x = 48f - ((float) (_endDt - ((DateTime) data._dateTime)).TotalMinutes / 60f);
-                            float y = (float) data._progress;
+                            float x = 48f - ((float) (_endDt - ((DateTime) data.DateTime)).TotalMinutes / 60f);
+                            float y = (float) data.Progress;
                             publicPoint[publicPoint.Length - 1] = new Vector2(x, y);
 //                        Debug.Log(((_endDt-((DateTime)row[0])).TotalMinutes)/60);
                         }
@@ -512,7 +516,9 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
                         MySQLUtil.DBClose();
                         _localData.Password = "";
                         LocalDataExport();
-                        Debug.Log("password error");
+                        
+                        EditorUtility.DisplayDialog("パスワードチェックエラー", "パスワードが合いません\r\n再入力をお願いします", "OK");
+//                        Debug.Log("password error");
                         return false;
                     }
                 }
@@ -538,8 +544,8 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
         {
             var passwordWindow = EditorWindow.GetWindow<PasswordWindow>("UserPassword", true);
             passwordWindow.Setup(callback);
-            passwordWindow.minSize = new Vector2(480, 400);
-            passwordWindow.maxSize = new Vector2(480, 400);
+            passwordWindow.minSize = new Vector2(240, 100);
+            passwordWindow.maxSize = new Vector2(240, 100);
         }
 
         private void OpenListWindow()
@@ -574,7 +580,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
 
         void OnInspectorUpdate()
         {
-            if (_nextUpdate + updatetime < EditorApplication.timeSinceStartup)
+            if (_nextUpdate + _updateTime < EditorApplication.timeSinceStartup)
             {
                 Repaint();
                 ChangeTime();
@@ -587,14 +593,14 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
             // 新規の場合は作成
             if (!AssetDatabase.Contains(_localData as UnityEngine.Object))
             {
-                string directory = Path.GetDirectoryName(LOCALASSET_PATH);
+                string directory = Path.GetDirectoryName(LocalAssetPath);
                 if (!Directory.Exists(directory))
                 {
                     Directory.CreateDirectory(directory);
                 }
 
                 // アセット作成
-                AssetDatabase.CreateAsset(_localData, LOCALASSET_PATH);
+                AssetDatabase.CreateAsset(_localData, LocalAssetPath);
             }
 
             // インスペクターから設定できないようにする
@@ -609,7 +615,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
 
         private void LocalDataImport()
         {
-            LocalData localData = AssetDatabase.LoadAssetAtPath<LocalData>(LOCALASSET_PATH);
+            LocalData localData = AssetDatabase.LoadAssetAtPath<LocalData>(LocalAssetPath);
             if (localData == null)
                 return;
             _localData = localData;
@@ -620,14 +626,14 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
             // 新規の場合は作成
             if (!AssetDatabase.Contains(_rankingData as UnityEngine.Object))
             {
-                string directory = Path.GetDirectoryName(GameJam2020inWinter.RANKINGASSET_PATH);
+                string directory = Path.GetDirectoryName(GameJam2020inWinter.RankingAssetPath);
                 if (!Directory.Exists(directory))
                 {
                     Directory.CreateDirectory(directory);
                 }
 
                 // アセット作成
-                AssetDatabase.CreateAsset(_rankingData, GameJam2020inWinter.RANKINGASSET_PATH);
+                AssetDatabase.CreateAsset(_rankingData, GameJam2020inWinter.RankingAssetPath);
             }
 
             // インスペクターから設定できないようにする
@@ -642,7 +648,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
 
         private void RankingDataImport()
         {
-            RankingData rankingData = AssetDatabase.LoadAssetAtPath<RankingData>(GameJam2020inWinter.RANKINGASSET_PATH);
+            RankingData rankingData = AssetDatabase.LoadAssetAtPath<RankingData>(GameJam2020inWinter.RankingAssetPath);
             if (rankingData == null)
                 return;
             _rankingData = rankingData;

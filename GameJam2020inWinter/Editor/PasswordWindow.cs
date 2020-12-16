@@ -35,11 +35,11 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
             }
 
             EditorGUI.EndDisabledGroup();
-            if (GUILayout.Button("CANCEL", GUILayout.Height(30f)))
-            {
-                _callback(null);
-                Close();
-            }
+//            if (GUILayout.Button("CANCEL", GUILayout.Height(30f)))
+//            {
+//                _callback(null);
+//                Close();
+//            }
 
             GUILayout.EndHorizontal();
 

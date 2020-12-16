@@ -10,25 +10,14 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
 {
     public class RankingWindow : EditorWindow
     {
-//        bool _isInit = false;
-//
-//        private System.Action<PublicData> _callback;
-
-//        public void Setup(System.Action<PublicData> callback)
-//        {
-//            _callback = callback;
-//        }
-        private static string database = "Cluster";
-        private static string table = "GameJam2020inWinter";
-        private static string userTable = "GameJam2020inWinterUser";
         private long _height = 17;
         private int _rankingNumber = 0;
 
         private RankingData _rankingData = null;
         private LocalData _localData = null;
 
-        private int dataSize = 0;
-        private Vector2 scrollPos = Vector2.zero;
+        private int _dataSize ;
+        private Vector2 _scrollPos = Vector2.zero;
 
         void Awake()
         {
@@ -65,6 +54,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
                     "GROUP BY Name	 " +
                     ") as tbl3 " +
                     "where tbl1.UpdateTime = tbl3.UpdateTime and Progress =tbl3.MAXProgress AND tbl1.Name =tbl3.Name " +
+                    "ORDER BY Progress DESC,tbl1.UpdateTime ASC "+
                     "; ";
 
 
@@ -104,7 +94,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
 
         void OnGUI()
         {
-            scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+            _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
             {
                 using (var HorizontallArea = new EditorGUILayout.HorizontalScope())
                 {
@@ -115,7 +105,16 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
                         foreach (KeyValuePair<string, RankingDataStruct> data in _rankingData.rankingData)
                         {
                             GUIStyle style = new GUIStyle();
-                            style.normal.textColor = data.Value._color;
+
+                            if (_localData.TeamName != data.Key)
+                            {
+                                style.normal.textColor = data.Value._color;
+                            }
+                            else
+                            {
+                                style.normal.textColor = Color.red;
+                            }
+
                             style.fontStyle = FontStyle.Bold;
 
 
@@ -338,14 +337,14 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
             // 新規の場合は作成
             if (!AssetDatabase.Contains(_rankingData as UnityEngine.Object))
             {
-                string directory = Path.GetDirectoryName(GameJam2020inWinter.RANKINGASSET_PATH);
+                string directory = Path.GetDirectoryName(GameJam2020inWinter.RankingAssetPath);
                 if (!Directory.Exists(directory))
                 {
                     Directory.CreateDirectory(directory);
                 }
 
                 // アセット作成
-                AssetDatabase.CreateAsset(_rankingData, GameJam2020inWinter.RANKINGASSET_PATH);
+                AssetDatabase.CreateAsset(_rankingData, GameJam2020inWinter.RankingAssetPath);
             }
 
             // インスペクターから設定できないようにする
@@ -360,7 +359,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
 
         private void RankingDataImport()
         {
-            RankingData rankingData = AssetDatabase.LoadAssetAtPath<RankingData>(GameJam2020inWinter.RANKINGASSET_PATH);
+            RankingData rankingData = AssetDatabase.LoadAssetAtPath<RankingData>(GameJam2020inWinter.RankingAssetPath);
             if (rankingData == null)
                 return;
             _rankingData = rankingData;
@@ -368,7 +367,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
 
         private void LocalDataImport()
         {
-            LocalData localData = AssetDatabase.LoadAssetAtPath<LocalData>(GameJam2020inWinter.LOCALASSET_PATH);
+            LocalData localData = AssetDatabase.LoadAssetAtPath<LocalData>(GameJam2020inWinter.LocalAssetPath);
             if (localData == null)
                 return;
             _localData = localData;
