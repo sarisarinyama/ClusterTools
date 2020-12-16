@@ -7,9 +7,9 @@ namespace sarisarinyama.cluster
 {
     public class NestItemSeacher : MonoBehaviour
     {
-        [SerializeField] private bool outputItemID=true;
-        [SerializeField] private bool outputItemName=true;
-        [SerializeField] private bool searchOpenPrefab=true;
+        [SerializeField] private bool outputItemID = true;
+        [SerializeField] private bool outputItemName = true;
+        [SerializeField] private bool searchOpenPrefab = true;
 
         private List<string> parentAndChild = new List<string>();
 
@@ -22,8 +22,8 @@ namespace sarisarinyama.cluster
                 string path = AssetDatabase.GetAssetOrScenePath(item.gameObject);
                 bool isScene = true;
                 // シーン上に存在するオブジェクトかどうか文字列で判定.
-                if(!searchOpenPrefab)isScene= path.Contains(".unity");
-                
+                if (!searchOpenPrefab) isScene = path.Contains(".unity");
+
                 if (isScene)
                 {
                     Item[] items = item.gameObject.GetComponentsInChildren<Item>(true);
@@ -31,20 +31,18 @@ namespace sarisarinyama.cluster
                     {
                         SearchChildItem(items[i].gameObject);
                     }
-                    
+
                     // Itemが複数ついているオブジェクトをチェック（イレギュラーなエラーだと思います）
                     SearchDualItem(item);
                 }
-
             }
         }
 
         private void SearchDualItem(Item item)
         {
-            var items =item.gameObject.GetComponents<Item>();
+            var items = item.gameObject.GetComponents<Item>();
             if (items.Length >= 2)
             {
-                
                 string debugText = "";
                 debugText = item.gameObject.name + "にItemが複数付与されています。";
                 if (outputItemID) debugText += " [" + item.gameObject.GetComponent<Item>().Id + "]";
@@ -80,17 +78,17 @@ namespace sarisarinyama.cluster
             debugText += " - " + childObject.name.ToString();
             if (outputItemID) debugText += " [" + childObject.GetComponent<Item>().Id + "]";
             if (outputItemName) debugText += " [" + childObject.GetComponent<Item>().ItemName + "]";
-            if (parentAndChild.Count==0)
+            if (parentAndChild.Count == 0)
             {
                 parentAndChild.Add(debugText);
                 Debug.Log(debugText);
             }
             else
             {
-                if (null==parentAndChild.Find(n => n.Equals(debugText)))
+                if (null == parentAndChild.Find(n => n.Equals(debugText)))
                 {
                     parentAndChild.Add(debugText);
-                    Debug.Log(debugText);   
+                    Debug.Log(debugText);
                 }
             }
         }
