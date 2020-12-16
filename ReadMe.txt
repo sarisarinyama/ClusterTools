@@ -1,3 +1,4 @@
+License
 
 #included MySQL Connector/NET 6.10.9
 ./GameJam2020inWinter/Plugins/MySql.Data.dll
