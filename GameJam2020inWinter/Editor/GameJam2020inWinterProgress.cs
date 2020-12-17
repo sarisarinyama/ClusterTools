@@ -340,7 +340,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
                     _localData.URL = EditorGUILayout.TextField("", _localData.URL);
                     using (var horizontalArea2 = new EditorGUILayout.HorizontalScope())
                     {
-                        if (GUILayout.Button("登録"))
+                        if (GUILayout.Button("登録/更新"))
                         {
                             UserDataUpdate();
                         }
@@ -553,7 +553,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
             var rankingWindow = EditorWindow.GetWindow<RankingWindow>("ProgressList", true);
 //            rankingWindow.Setup(callback);
 
-            rankingWindow.minSize = new Vector2(480, 480);
+            rankingWindow.minSize = new Vector2(800, 600);
         }
 
 

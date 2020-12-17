@@ -66,17 +66,17 @@ namespace sarisarinyama.common
             return true;
         }
 
-        public static DataTable DBSelect(string _selectSql, string[] _parameters)
+        public static DataTable DBSelect(string selectSql, string[] parameters)
         {
             DataTable tbl = new DataTable();
             using (MySqlCommand _cmd = new MySqlCommand())
             {
                 MySqlDataReader _rdr = null;
                 _cmd.Connection = _con;
-                _cmd.CommandText = _selectSql;
-                for (int i = 0; i < _parameters.Length; i += 2)
+                _cmd.CommandText = selectSql;
+                for (int i = 0; i < parameters.Length; i += 2)
                 {
-                    _cmd.Parameters.Add(_parameters[i], _parameters[i + 1]);
+                    _cmd.Parameters.AddWithValue(parameters[i], parameters[i + 1]);
                 }
 
                 _rdr = _cmd.ExecuteReader();
@@ -108,17 +108,17 @@ namespace sarisarinyama.common
             return tbl;
         }
 
-        public static bool DBInsert(string _insertSql, string[] _parameters)
+        public static bool DBInsert(string insertSql, string[] parameters)
         {
             try
             {
                 using (_cmd = new MySqlCommand())
                 {
                     _cmd.Connection = _con;
-                    _cmd.CommandText = _insertSql;
-                    for (int i = 0; i < _parameters.Length; i += 2)
+                    _cmd.CommandText = insertSql;
+                    for (int i = 0; i < parameters.Length; i += 2)
                     {
-                        _cmd.Parameters.Add(_parameters[i], _parameters[i + 1]);
+                        _cmd.Parameters.AddWithValue(parameters[i], parameters[i + 1]);
                     }
 
 

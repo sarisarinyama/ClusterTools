@@ -9,7 +9,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
     public class RankingDataStruct
     {
         [SerializeField] public bool _show = false;
-        [SerializeField] public Color _color = Color.gray;
+        [SerializeField] public Color _color = Color.white;
         [SerializeField] public int _progress = 0;
         [SerializeField] public DateTime _dateTime;
         [SerializeField] public string _url = "";
