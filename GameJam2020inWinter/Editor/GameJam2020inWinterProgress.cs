@@ -351,7 +351,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
 
                 using (var verticalArea = new EditorGUILayout.VerticalScope())
                 {
-                    if (GUILayout.Button("ランキング"))
+                    if (GUILayout.Button("他チーム"))
                     {
                         OpenListWindow();
                     }
