@@ -33,7 +33,6 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
         bool _isDisable = false;
         private Vector2[] _userPoint = new Vector2[] {new Vector2(0f, 0f)};
 
-//        private DateTime beginDt =new DateTime(2020,12,18,20,00,00,00);
 //        private static DateTime _endDt =new DateTime(2020,12,20,20,00,00,00);
         private static DateTime _endDt = new DateTime(2020, 12, 20, 20, 00, 00, 00);
         private static DateTime _nowDt;
@@ -180,11 +179,11 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
             _publicData = ScriptableObject.CreateInstance<PublicData>();
 
             MySQLUtil.DBConnection();
-            string _selectPublicData = $"SELECT Name,UpdateTime,Progress " +
+            string selectPublicData = $"SELECT Name,UpdateTime,Progress " +
                                        $"FROM {database}.{table} " +
                                        $"ORDER BY Name ASC,UpdateTime ASC,Progress ASC;";
-            string[] _parameters = { };
-            DataTable tbl = MySQLUtil.DBSelect(_selectPublicData, _parameters);
+            string[] parameters = { };
+            DataTable tbl = MySQLUtil.DBSelect(selectPublicData, parameters);
 
 
             PublicDataStruct[] publicDataStructs = new PublicDataStruct[] { };
@@ -437,14 +436,14 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
         }
         private void MakeUserPoint()
         {
-            string _selectUserProgress = $"SELECT UpdateTime,Progress " +
+            string selectUserProgress = $"SELECT UpdateTime,Progress " +
                                          $"FROM {database}.{table} " +
                                          $"WHERE Name=@Name " +
                                          $"ORDER BY UpdateTime ASC;";
 
-            string[] _parameters = new string[] {"Name", _localData.TeamName};
+            string[] parameters = new string[] {"Name", _localData.TeamName};
 
-            DataTable tbl = MySQLUtil.DBSelect(_selectUserProgress, _parameters);
+            DataTable tbl = MySQLUtil.DBSelect(selectUserProgress, parameters);
             _userPoint = new Vector2[] {new Vector2(0f, 0f)};
             foreach (DataRow row in tbl.Rows)
             {
@@ -464,7 +463,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
                 Vector2[] publicPoint;
                 foreach (KeyValuePair<string, PublicDataStruct[]> dic in _publicData.publicDatas)
                 {
-                    if (_rankingData.rankingData.ContainsKey(dic.Key)&& _rankingData.rankingData[dic.Key]._show)
+                    if (_rankingData.rankingData != null && (_rankingData.rankingData.ContainsKey(dic.Key)&& _rankingData.rankingData[dic.Key]._show))
                     {
                         publicPoint = new Vector2[] {new Vector2(0f, 0f)};
                         foreach (PublicDataStruct data in dic.Value)
@@ -476,7 +475,7 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
 //                        Debug.Log(((_endDt-((DateTime)row[0])).TotalMinutes)/60);
                         }
 
-                            GUIChartEditor.PushLineChart(publicPoint, _rankingData.rankingData[dic.Key]._color);
+                        GUIChartEditor.PushLineChart(publicPoint, _rankingData.rankingData[dic.Key]._color);
                     }
                 }
             }
@@ -495,10 +494,10 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
         private bool CheckPassword()
         {
             MySQLUtil.DBConnection();
-            string _selectSql = $"SELECT Password FROM  {database}.{userTable} WHERE Name=@Name ;";
-            string[] _parameters = new string[] {"Name", _localData.TeamName};
+            string selectSql = $"SELECT Password FROM  {database}.{userTable} WHERE Name=@Name ;";
+            string[] parameters = new string[] {"Name", _localData.TeamName};
 
-            DataTable tbl = MySQLUtil.DBSelect(_selectSql, _parameters);
+            DataTable tbl = MySQLUtil.DBSelect(selectSql, parameters);
             // 3.exist data?
             if (tbl.Rows.Count == 1)
             {
@@ -526,14 +525,14 @@ namespace sarisarinyama.cluster.GameJam2020inWinter
             else
             {
                 // no 6. db insert
-                string _insertSql = $"insert into {database}.{userTable} (Name ,Password) " +
+                string insertSql = $"insert into {database}.{userTable} (Name ,Password) " +
                                     " value ( @Name , @Password );";
-                _parameters = new string[]
+                parameters = new string[]
                 {
                     "Name", _localData.TeamName,
                     "Password", _localData.Password
                 };
-                MySQLUtil.DBInsert(_insertSql, _parameters);
+                MySQLUtil.DBInsert(insertSql, parameters);
                 return true;
             }
 

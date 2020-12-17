@@ -69,20 +69,20 @@ namespace sarisarinyama.common
         public static DataTable DBSelect(string selectSql, string[] parameters)
         {
             DataTable tbl = new DataTable();
-            using (MySqlCommand _cmd = new MySqlCommand())
+            using (MySqlCommand mySqlCommand = new MySqlCommand())
             {
-                MySqlDataReader _rdr = null;
-                _cmd.Connection = _con;
-                _cmd.CommandText = selectSql;
+                MySqlDataReader rdr = null;
+                mySqlCommand.Connection = _con;
+                mySqlCommand.CommandText = selectSql;
                 for (int i = 0; i < parameters.Length; i += 2)
                 {
-                    _cmd.Parameters.AddWithValue(parameters[i], parameters[i + 1]);
+                    mySqlCommand.Parameters.AddWithValue(parameters[i], parameters[i + 1]);
                 }
 
-                _rdr = _cmd.ExecuteReader();
-                if (_rdr.HasRows)
+                rdr = mySqlCommand.ExecuteReader();
+                if (rdr.HasRows)
                 {
-                    tbl.Load(_rdr);
+                    tbl.Load(rdr);
                 }
             }
 
@@ -90,18 +90,18 @@ namespace sarisarinyama.common
         }
 
 
-        public static DataTable DBSelect(string _selectSql)
+        public static DataTable DBSelect(string selectSql)
         {
             DataTable tbl = new DataTable();
-            using (MySqlCommand _cmd = new MySqlCommand())
+            using (MySqlCommand mySqlCommand = new MySqlCommand())
             {
-                MySqlDataReader _rdr = null;
-                _cmd.Connection = _con;
-                _cmd.CommandText = _selectSql;
-                _rdr = _cmd.ExecuteReader();
-                if (_rdr.HasRows)
+                MySqlDataReader rdr = null;
+                mySqlCommand.Connection = _con;
+                mySqlCommand.CommandText = selectSql;
+                rdr = mySqlCommand.ExecuteReader();
+                if (rdr.HasRows)
                 {
-                    tbl.Load(_rdr);
+                    tbl.Load(rdr);
                 }
             }
 
